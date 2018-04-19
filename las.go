@@ -16,7 +16,8 @@ type LidarPoint struct {
 	Classification                                  byte
 	ScanAngleRank                                   int8
 	UserData                                        uint8
-	PointSourceId                                   uint16
+	PointSourceID                                   uint16
+	GPSTime                                         float64
 }
 
 // LAS reads a LAS file
@@ -90,7 +91,7 @@ func (r *Reader) readHeader() error {
 	return nil
 }
 
-func (r Reader) ReadPoint() LidarPoint {
+func (r *Reader) ReadPoint() LidarPoint {
 	lp := LidarPoint{}
 
 	lp.X = (float64(readUInt32(r.Lasfile)) * r.XScale) + r.XOffset
@@ -107,9 +108,11 @@ func (r Reader) ReadPoint() LidarPoint {
 	lp.Classification = readUInt8(r.Lasfile)
 	lp.ScanAngleRank = readInt8(r.Lasfile)
 	lp.UserData = readUInt8(r.Lasfile)
-	lp.PointSourceId = readUInt16(r.Lasfile)
+	lp.PointSourceID = readUInt16(r.Lasfile)
 
-	skipBytes(r.Lasfile, 12)
+	if r.PointFormat == 1 {
+		lp.GPSTime = readFloat64(r.Lasfile)
+	}
 
 	return lp
 }

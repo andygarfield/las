@@ -1,5 +1,5 @@
 # las
-A library for reading LAS lidar files
+A go library for reading LAS lidar files
 
 Currently only supporting LAS version 1.1, but soon to include the more (and hopefully a LAS writer).
 

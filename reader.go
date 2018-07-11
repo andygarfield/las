@@ -23,7 +23,7 @@ type LidarPoint struct {
 
 // Reader reads a LAS file
 type Reader struct {
-	r                                                 *bufio.Reader
+	r                                                 io.Reader
 	Version, SystemIdentifier, GeneratingSoftware     string
 	Day, Year, HeaderSize                             uint16
 	OffsetToPointData, VLRNum                         uint32
@@ -34,20 +34,20 @@ type Reader struct {
 	XMax, XMin, YMax, YMin, ZMax, ZMin                float64
 }
 
+func NewReader(r io.Reader) *Reader {
+	lasReader := &Reader{r: bufio.NewReader(r)}
+	lasReader.readHeader()
+
+	return lasReader
+}
+
 func OpenFile(filename string) (*Reader, error) {
 	f, err := os.Open(filename)
-
 	if err != nil {
 		return &Reader{}, err
 	}
 
-	r := &Reader{
-		r: bufio.NewReader(f),
-	}
-
-	r.readHeader()
-
-	return r, nil
+	return NewReader(f), nil
 }
 
 func (r *Reader) readHeader() error {

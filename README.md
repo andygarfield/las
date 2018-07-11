@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-        l, _ := las.Open("./example.las")
+        l, _ := las.OpenFile("./example.las")
 
         for i := 0; i < 300; i++ {
                 p := l.ReadPoint()

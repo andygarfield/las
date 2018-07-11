@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func TestOpen(t *testing.T) {
-	_, err := Open("./example/FL_PinellasCo_2007_000398.las")
+func TestOpenFile(t *testing.T) {
+	_, err := OpenFile("./testdata/FL_PinellasCo_2007_000398.las")
 	if err != nil {
 		fmt.Println(err)
 		t.Failed()
@@ -14,12 +14,17 @@ func TestOpen(t *testing.T) {
 }
 
 func TestReadPoint(t *testing.T) {
-	las, err := Open("./example/FL_PinellasCo_2007_000398.las")
+	las, err := OpenFile("./testdata/FL_PinellasCo_2007_000398.las")
 	if err != nil {
 		fmt.Println(err)
+		t.Failed()
 	}
 
-	p := las.ReadPoint()
+	p, err := las.ReadPoint()
+	if err != nil {
+		fmt.Println(err)
+		t.Failed()
+	}
 
 	fmt.Printf("%f\n", p.X)
 	fmt.Printf("%f\n", p.Y)
@@ -32,5 +37,5 @@ func TestReadPoint(t *testing.T) {
 	fmt.Println(p.Classification)
 	fmt.Println(p.ScanAngleRank)
 	fmt.Println(p.UserData)
-	fmt.Println(p.PointSourceId)
+	fmt.Println(p.PointSourceID)
 }
